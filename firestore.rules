@@ -1,0 +1,40 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    function isAuth() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      // Check if the user is an admin by looking up their role in the 'users' collection.
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    match /users/{userId} {
+      // Users can create their own profile.
+      allow create: if isAuth() && request.auth.uid == userId;
+      // Users can read their own profile. Admins can read any profile.
+      allow read: if isAuth() && (request.auth.uid == userId || isAdmin());
+      // Users can update their own profile.
+      allow update: if isAuth() && request.auth.uid == userId;
+    }
+
+    match /stations/{stationId} {
+      // Anyone can read a single station or list all stations.
+      allow get, list: if true;
+      // Only admins can create, update, or delete stations.
+      allow write: if isAuth() && isAdmin();
+    }
+
+    match /bookings/{bookingId} {
+      // Users can create bookings for themselves.
+      allow create: if isAuth() && request.auth.uid == request.resource.data.userId;
+      // Users can only read their own bookings.
+      allow read: if isAuth() && request.auth.uid == resource.data.userId;
+      // Write access is generally not needed for bookings from the client-side after creation.
+      allow update, delete: if false;
+    }
+  }
+}

@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MapPin, Star } from 'lucide-react';
 import type { Station } from '@/lib/types';
+import { getStationImageUrl } from '@/lib/utils';
 
 interface StationCardProps {
   station: Station;
@@ -17,10 +18,10 @@ export function StationCard({ station }: StationCardProps) {
   return (
     <Card className="overflow-hidden transition-all hover:shadow-lg">
       <div className="md:flex">
-        <div className="md:flex-shrink-0 relative h-48 w-full md:h-full md:w-56">
+        <div className="md:flex-shrink-0 relative h-48 w-full md:h-48 md:w-56">
           <Image
             className="object-cover"
-            src={station.imageUrl}
+            src={getStationImageUrl(station.name)}
             alt={`Charging station ${station.name}`}
             fill
             sizes="(max-width: 768px) 100vw, 224px"

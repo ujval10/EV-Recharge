@@ -15,6 +15,7 @@ import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { getStationImageUrl } from '@/lib/utils';
 
 export default function StationDetailPage() {
   const params = useParams();
@@ -125,7 +126,7 @@ export default function StationDetailPage() {
 
         <div className="h-96 w-full rounded-lg overflow-hidden relative">
           <Image
-            src={station.imageUrl}
+            src={getStationImageUrl(station.name)}
             alt={`Image of ${station.name}`}
             fill
             className="object-cover"

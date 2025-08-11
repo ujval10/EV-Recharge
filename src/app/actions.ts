@@ -82,4 +82,3 @@ export async function toggleSlotAvailability(stationId: string, slotToToggle: st
         return { success: false, message: 'Failed to update the slot. Please try again.' };
     }
 }
-//Ujval//
